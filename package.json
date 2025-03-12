@@ -1,15 +1,19 @@
 {
   "name": "replace-worker-imports-swc-plugin",
   "version": "0.1.0",
-  "description": "",
-  "author": "",
+  "description": "Replaces worker-loader styled imports to standard worker syntax",
+  "author": "rishabh3112 <rishabh31121999@gmail.com>",
   "license": "MIT",
   "keywords": [
-    "swc-plugin"
+    "swc-plugin",
+    "worker",
+    "worker-loader"
   ],
-  "main": "target/wasm32-wasi/release/replace_worker_imports_swc_plugin.wasm",
+  "main": "replace_worker_imports_swc_plugin.wasm",
+  "repository": "github:rishabh3112/replace-worker-imports-swc-plugin",
   "scripts": {
-    "prepublishOnly": "cargo build-wasi --release"
+    "build": "cargo build-wasi --release && cp target/wasm32-wasi/release/replace_worker_imports_swc_plugin.wasm .",
+    "test": "cargo test"
   },
   "files": [],
   "preferUnplugged": true

@@ -1,6 +1,4 @@
-target/*
-# !target/wasm32-wasi
-# target/wasm32-wasi/*
-# !target/wasm32-wasi/release
-# target/wasm32-wasi/release/*
-# !target/wasm32-wasi/release/replace_worker_imports_swc_plugin.wasm
+/target
+^target/
+target
+replace_worker_imports_swc_plugin.wasm
