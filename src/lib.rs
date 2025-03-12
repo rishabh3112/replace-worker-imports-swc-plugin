@@ -2,11 +2,10 @@ use std::collections::HashMap;
 
 use swc_core::atoms::Atom;
 use swc_core::common::DUMMY_SP;
-use swc_core::ecma::visit::FoldWith;
 use swc_core::ecma::{
     ast::*,
     transforms::testing::test_inline,
-    visit::{as_folder, VisitMut, VisitMutWith},
+    visit::{visit_mut_pass, VisitMut, VisitMutWith},
 };
 use swc_core::plugin::{plugin_transform, proxies::TransformPluginProgramMetadata};
 
@@ -102,14 +101,16 @@ impl VisitMut for TransformVisitor {
 
 #[plugin_transform]
 pub fn process_transform(program: Program, _metadata: TransformPluginProgramMetadata) -> Program {
-    program.fold_with(&mut as_folder(TransformVisitor {
+    let mut program = program;
+    program.visit_mut_with(&mut visit_mut_pass(TransformVisitor {
         import_vs_path: HashMap::new(),
-    }))
+    }));
+    program
 }
 
 test_inline!(
     Default::default(),
-    |_| as_folder(TransformVisitor {
+    |_| visit_mut_pass(TransformVisitor {
         import_vs_path: HashMap::new(),
     }),
     boo,
