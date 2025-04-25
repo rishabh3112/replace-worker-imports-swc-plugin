@@ -62,34 +62,49 @@ impl VisitMut for TransformVisitor {
                         ))),
                         span: node.span,
                         ctxt: node.ctxt,
-                        args: Option::Some(vec![
-                            ExprOrSpread {
-                                expr: Box::new(Expr::Lit(Lit::Str(Str::from(path.as_str())))),
-                                spread: Option::None,
-                            },
-                            ExprOrSpread {
-                                expr: Box::new(Expr::Member(MemberExpr {
-                                    span: DUMMY_SP,
-                                    obj: Box::new(Expr::Member(MemberExpr {
-                                        span: DUMMY_SP,
-                                        obj: Box::new(Expr::Ident(Ident::new(
-                                            Atom::from("import"),
-                                            DUMMY_SP,
-                                            ident.ctxt,
-                                        ))),
-                                        prop: MemberProp::Ident(IdentName::new(
-                                            Atom::from("meta"),
-                                            DUMMY_SP,
-                                        )),
-                                    })),
-                                    prop: MemberProp::Ident(IdentName::new(
-                                        Atom::from("url"),
-                                        DUMMY_SP,
-                                    )),
-                                })),
-                                spread: Option::None,
-                            },
-                        ]),
+                        args: Option::Some(vec![ExprOrSpread {
+                            expr: Box::new(Expr::New(NewExpr {
+                                callee: Box::new(Expr::Ident(Ident::new(
+                                    Atom::from("URL"),
+                                    ident.span,
+                                    ident.ctxt,
+                                ))),
+                                span: node.span,
+                                ctxt: node.ctxt,
+                                args: Option::Some(vec![
+                                    ExprOrSpread {
+                                        expr: Box::new(Expr::Lit(Lit::Str(Str::from(
+                                            path.as_str(),
+                                        )))),
+                                        spread: Option::None,
+                                    },
+                                    ExprOrSpread {
+                                        expr: Box::new(Expr::Member(MemberExpr {
+                                            span: DUMMY_SP,
+                                            obj: Box::new(Expr::Member(MemberExpr {
+                                                span: DUMMY_SP,
+                                                obj: Box::new(Expr::Ident(Ident::new(
+                                                    Atom::from("import"),
+                                                    DUMMY_SP,
+                                                    ident.ctxt,
+                                                ))),
+                                                prop: MemberProp::Ident(IdentName::new(
+                                                    Atom::from("meta"),
+                                                    DUMMY_SP,
+                                                )),
+                                            })),
+                                            prop: MemberProp::Ident(IdentName::new(
+                                                Atom::from("url"),
+                                                DUMMY_SP,
+                                            )),
+                                        })),
+                                        spread: Option::None,
+                                    },
+                                ]),
+                                type_args: Option::None,
+                            })),
+                            spread: Option::None,
+                        }]),
                         type_args: Option::None,
                     };
                 }
@@ -121,6 +136,6 @@ test_inline!(
     "#,
     r#"
     import { useMemo } from "react";
-    const worker = new Worker("./simulation.worker", import.meta.url);
+    const worker = new Worker(new URL("./simulation.worker", import.meta.url));
     "#
 );
